@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "passionkind.prettier-vscode-with-tabs",
+        "numso.prettier-standard-vscode",
+        "chenxsan.vscode-standardjs"
+    ]
+}
