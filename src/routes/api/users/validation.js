@@ -1,23 +1,18 @@
-const Joi = require("joi");
-const mongoose = require("mongoose");
-const { HttpCode } = require("../../../helpers/constants");
+const Joi = require('joi');
+const mongoose = require('mongoose');
+const { HttpCode } = require('../../../helpers/constants');
 
 const schemaCreateUser = Joi.object({
   name: Joi.string().min(3).max(30).required(),
-  email: Joi.string()
-    .email()
-    .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]+$")).required(),
-  repeatPassword: Joi.string().valid(Joi.ref("password")).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]+$')).required(),
+  repeatPassword: Joi.string().valid(Joi.ref('password')).required(),
 });
 
 const schemaLoginUser = Joi.object({
-  email: Joi.string()
-    .email()
-    .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]+$")).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]+$')).required(),
 });
-
 
 const validate = async (schema, obj, next) => {
   try {
@@ -26,7 +21,7 @@ const validate = async (schema, obj, next) => {
   } catch (err) {
     next({
       status: HttpCode.BAD_REQUEST,
-      message: err.message.replace(/"/g, ""),
+      message: err.message.replace(/"/g, ''),
     });
   }
 };
