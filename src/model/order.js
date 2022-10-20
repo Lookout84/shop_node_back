@@ -7,16 +7,16 @@ const orderSchema = new Schema(
       type: Date,
       required: true,
     },
-    amountGoods: {
+    amountProduct: {
       type: Number,
     },
-    costGoods: {
+    costProduct: {
       type: Number,
     },
     total: {
       type: Number,
     },
-    idGoods: {
+    productId: {
       type: String,
     },
     owner: {

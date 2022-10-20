@@ -35,7 +35,7 @@ const categorySchema = new Schema(
   },
 );
 
-categorySchema.path('name').validate(value => {
+categorySchema.path('category').validate(value => {
   const re = /[A-Z]\w+/g;
   return re.test(String(value));
 });

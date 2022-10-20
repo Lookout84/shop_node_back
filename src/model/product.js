@@ -11,7 +11,6 @@ const productsSchema = new Schema(
       type: String,
       trim: true,
       stringType: 'lowercase',
-      default: '-',
     },
     amount: {
       type: Number,
@@ -25,10 +24,9 @@ const productsSchema = new Schema(
     cost: {
       type: Number,
     },
-    category: {
-      type: String,
-      trim: true,
-      stringType: 'lowercase',
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: 'category',
     },
     image: {
       type: String,
@@ -62,6 +60,6 @@ productsSchema.path('name').validate(value => {
 productsSchema.plugin(mongoosePaginate);
 
 productsSchema.plugin(mongoosePaginate);
-const Products = model('Products', productsSchema);
+const Product = model('Product', productsSchema);
 
-module.exports = Products;
+module.exports = Product;

@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const boolParser = require('express-query-boolean');
-const { limiterAPI } = require('./helpers/constants');
+const { limiterAPI } = require('./src/helpers/constants');
 const path = require('path');
 require('dotenv').config();
 const PUBLIC_DIR = process.env.PUBLIC_DIR;

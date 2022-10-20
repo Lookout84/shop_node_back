@@ -1,49 +1,38 @@
-const Transactions = require('../repositories/transactions');
+const Orders = require('../repositories/orders');
 const Users = require('../repositories/users');
 const { HttpCode } = require('../helpers/constants');
-const UpdateDataUser = require('../helpers/updateDataUser');
-const {
-  incomeSum,
-  costSum,
-  getCategories,
-  concatArray,
-} = require('../helpers/operationsTracsactions');
+
 const { v4: uuidv4 } = require('uuid');
 
-const getTransactions = async (req, res, next) => {
+const getOrders = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { docs: transactions, ...rest } = await Transactions.getTransactions(
-      userId,
-      req.query,
-    );
+    const { docs: orders, ...rest } = await Orders.getOrders(userId, req.query);
     transactions.sort(function (a, b) {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
     return res.json({
       status: 'success',
       code: HttpCode.OK,
-      data: { transactions, ...rest },
+      data: { orders, ...rest },
     });
   } catch (error) {
     next(error);
   }
 };
 
-const addTransaction = async (req, res, next) => {
+const addOrder = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const transaction = await Transactions.addTransaction(userId, req.body);
-    if (transaction) {
-      const transactions = await Transactions.getAllTransactions(userId);
-      transactions.sort(function (a, b) {
+    const order = await Orders.addOrder(userId, req.body);
+    if (order) {
+      const orders = await Orders.getAllOrders(userId);
+      orders.sort(function (a, b) {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
-      await UpdateDataUser.updateBalance(userId, transaction);
-      await UpdateDataUser.updateCategory(userId, transaction);
       return res
         .status(HttpCode.CREATED)
-        .json({ status: 'success', code: HttpCode.CREATED, transactions });
+        .json({ status: 'success', code: HttpCode.CREATED, orders });
     }
     return res.status(HttpCode.BAD_REQUEST).json({
       status: 'error',
@@ -55,120 +44,23 @@ const addTransaction = async (req, res, next) => {
   }
 };
 
-const getStatisticTransactions = async (req, res, next) => {
+const updateOrder = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { category, balance } = req.user;
-    const transactions = await Transactions.getTransactionsByDate(
+    const order = await Orders.updateOrder(
       userId,
+      req.params.orderId,
       req.body,
     );
-    const incomeBalance = incomeSum(transactions);
-    const costBalance = costSum(transactions);
-    const costTransactions = transactions.filter(el => el.type === 'cost');
-    if (costTransactions.length !== 0) {
-      const categoriesTransactions = getCategories(transactions);
-      const newCategories = concatArray(categoriesTransactions, category);
-      return res.json({
-        status: 'success',
-        code: HttpCode.OK,
-        data: {
-          balance,
-          incomeBalance,
-          costBalance,
-          categories: [...newCategories],
-        },
-      });
-    } else {
-      const categoriesWithNull = category.map(elem => {
-        return {
-          id: uuidv4(),
-          name: elem.name,
-          amount: 0,
-          color: elem.color,
-        };
-      });
-      return res.json({
-        status: 'success',
-        code: HttpCode.OK,
-        data: {
-          balance,
-          incomeBalance,
-          costBalance,
-          categories: [...categoriesWithNull],
-        },
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getAllStatisticTransactions = async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const { category, balance } = req.user;
-    const allTransactions = await Transactions.getAllTransactions(userId);
-    const incomeBalance = incomeSum(allTransactions);
-    const costBalance = costSum(allTransactions);
-    const costTransactions = allTransactions.filter(el => el.type === 'cost');
-    if (costTransactions.length !== 0) {
-      const categoriesTransactions = getCategories(allTransactions);
-      const newCategories = concatArray(categoriesTransactions, category);
-      return res.json({
-        status: 'success',
-        code: HttpCode.OK,
-        data: {
-          balance,
-          incomeBalance,
-          costBalance,
-          categories: [...newCategories],
-        },
-      });
-    } else {
-      const categoriesWithNull = category.map(elem => {
-        return {
-          id: uuidv4(),
-          name: elem.name,
-          amount: 0,
-          color: elem.color,
-        };
-      });
-      return res.json({
-        status: 'success',
-        code: HttpCode.OK,
-        data: {
-          balance,
-          incomeBalance,
-          costBalance,
-          categories: [...categoriesWithNull],
-        },
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const updateTransaction = async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const transaction = await Transactions.updateTransaction(
-      userId,
-      req.params.transactionId,
-      req.body,
-    );
-    if (transaction) {
-      const transactions = await Transactions.getAllTransactions(userId);
-      transactions.sort(function (a, b) {
+    if (order) {
+      const orders = await Orders.getAllOrders(userId);
+      orders.sort(function (a, b) {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
-      await UpdateDataUser.updateBalance(userId, transaction);
-      await UpdateDataUser.updateCategory(userId, transaction);
       return res.json({
         status: 'success',
         code: HttpCode.OK,
-        transactions,
+        orders,
       });
     }
     return res.status(HttpCode.NOT_FOUND).json({
@@ -181,23 +73,20 @@ const updateTransaction = async (req, res, next) => {
   }
 };
 
-const removeTransaction = async (req, res, next) => {
+const removeOrder = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const transactionId = req.params.transactionId;
-    const transaction = await Transactions.removeTransaction(
-      userId,
-      transactionId,
-    );
-    if (transaction) {
-      const transactions = await Transactions.getAllTransactions(userId);
-      transactions.sort(function (a, b) {
+    const orderId = req.params.orderId;
+    const order = await Orders.removeOrder(userId, orderId);
+    if (order) {
+      const orders = await Orders.getAllOrders(userId);
+      orders.sort(function (a, b) {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
       return res.json({
         status: 'success',
         code: HttpCode.OK,
-        transactions,
+        orders,
       });
     }
     return res.status(HttpCode.NOT_FOUND).json({
@@ -211,10 +100,8 @@ const removeTransaction = async (req, res, next) => {
 };
 
 module.exports = {
-  getTransactions,
-  addTransaction,
-  getStatisticTransactions,
-  getAllStatisticTransactions,
-  updateTransaction,
-  removeTransaction,
+  getOrders,
+  addOrder,
+  updateOrder,
+  removeOrder,
 };
