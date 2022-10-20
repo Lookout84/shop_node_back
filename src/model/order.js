@@ -44,10 +44,10 @@ const orderSchema = new Schema(
   },
 );
 
-orderSchema.path('name').validate(value => {
-  const re = /[A-Z]\w+/g;
-  return re.test(String(value));
-});
+// orderSchema.path('name').validate(value => {
+//   const re = /[A-Z]\w+/g;
+//   return re.test(String(value));
+// });
 
 orderSchema.plugin(mongoosePaginate);
 

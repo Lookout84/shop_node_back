@@ -1,5 +1,5 @@
-const { Schema, model, SchemaTypes } = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2');
+import { Schema, model, SchemaTypes } from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const categorySchema = new Schema(
   {

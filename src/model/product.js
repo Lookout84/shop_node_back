@@ -12,9 +12,6 @@ const productsSchema = new Schema(
       trim: true,
       stringType: 'lowercase',
     },
-    amount: {
-      type: Number,
-    },
     description: {
       type: String,
       trim: true,

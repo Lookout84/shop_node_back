@@ -2,13 +2,13 @@ const Orders = require('../repositories/orders');
 const Users = require('../repositories/users');
 const { HttpCode } = require('../helpers/constants');
 
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 
 const getOrders = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { docs: orders, ...rest } = await Orders.getOrders(userId, req.query);
-    transactions.sort(function (a, b) {
+    orders.sort(function (a, b) {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
     return res.json({

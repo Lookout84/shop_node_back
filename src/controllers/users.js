@@ -16,7 +16,7 @@ const register = async (req, res, next) => {
       });
     }
 
-    const { id, name, email, avatarURL, order, address } = await Users.create(
+    const { id, name, email, avatarURL, address, role } = await Users.create(
       req.body,
     );
     const payload = { id };
@@ -25,7 +25,7 @@ const register = async (req, res, next) => {
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
-      user: { id, name, email, avatarURL, order, address, token },
+      user: { id, name, email, avatarURL, address, token, role },
     });
   } catch (error) {
     next(error);
@@ -44,14 +44,14 @@ const login = async (req, res, next) => {
       });
     }
     const id = user.id;
-    const { email, name, balance, avatarURL } = user;
+    const { email, name, avatarURL, address, role } = user;
     const payload = { id };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
     await Users.updateToken(id, token);
     return res.json({
       status: 'OK',
       code: HttpCode.OK,
-      data: { token, id, email, name, order, avatarURL, address },
+      data: { token, id, email, name, avatarURL, address, role },
     });
   } catch (error) {
     next(error);
@@ -71,13 +71,13 @@ const logout = async (req, res, next) => {
 const currentUser = async (req, res, next) => {
   try {
     const id = req.user.id;
-    const { name, email, balance, category, avatarURL } = await Users.findById(
+    const { name, email, address, avatarURL, role } = await Users.findById(
       id,
     );
     return res.status(HttpCode.OK).json({
       status: 'OK',
       code: HttpCode.OK,
-      user: { name, email, order, avatarURL },
+      user: { name, email, address, avatarURL, role },
     });
   } catch (error) {
     next(error);

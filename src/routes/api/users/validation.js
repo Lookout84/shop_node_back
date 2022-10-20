@@ -7,6 +7,8 @@ const schemaCreateUser = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]+$')).required(),
   repeatPassword: Joi.string().valid(Joi.ref('password')).required(),
+  address: Joi.string().min(3).max(30).required(),
+  role: Joi.string().min(3).max(30),
 });
 
 const schemaLoginUser = Joi.object({

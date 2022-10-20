@@ -25,7 +25,10 @@ const limiterAPI = {
 };
 
 
+const role = ['Administrator', 'User']
+
 module.exports = {
     HttpCode,
     limiterAPI,
+    role,
 };

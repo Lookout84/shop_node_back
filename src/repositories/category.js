@@ -1,7 +1,7 @@
 const Category = require('../model/category');
 
 const getCategoryById = async categoryId => {
-  const result = await Budget.findOne({
+  const result = await Category.findOne({
     _id: categoryId,
   });
   return result;
@@ -15,13 +15,23 @@ const addCategory = async body => {
 };
 
 const getAllCategory = async () => {
-  const result = await Order.find({}).sort({ category: -1 });
+  const result = await Category.find();
   return result;
+};
+
+const updateCategory = async (body) => {
+  const category = await category.findOneAndUpdate(
+    { ...body },
+    {
+      new: true,
+    },
+  );
+  return category;
 };
 
 module.exports = {
   getCategoryById,
-  getPlanBudgetsByDate,
   addCategory,
   getAllCategory,
+  updateCategory
 };
