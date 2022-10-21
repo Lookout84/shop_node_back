@@ -19,8 +19,11 @@ const getAllCategory = async () => {
   return result;
 };
 
-const updateCategory = async (body) => {
+const updateCategory = async (categoryId, body) => {
   const category = await category.findOneAndUpdate(
+    {
+      _id: categoryId,
+    },
     { ...body },
     {
       new: true,
@@ -33,5 +36,5 @@ module.exports = {
   getCategoryById,
   addCategory,
   getAllCategory,
-  updateCategory
+  updateCategory,
 };

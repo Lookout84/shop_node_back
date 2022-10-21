@@ -1,5 +1,5 @@
-import { Schema, model, SchemaTypes } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
+const { Schema, model, SchemaTypes } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const categorySchema = new Schema(
   {
@@ -36,7 +36,7 @@ const categorySchema = new Schema(
 );
 
 categorySchema.path('category').validate(value => {
-  const re = /[A-Z]\w+/g;
+  const re = [а - яА - ЯёЁa - zA - Z0 - 9] + $;
   return re.test(String(value));
 });
 
