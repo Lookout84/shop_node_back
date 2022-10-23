@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const { HttpCode } = require("../../../helpers/constants");
 
 const schemaCreateProduct = Joi.object({
-    date: Joi.date().required(),
-    name: Joi.string().min(3).max(255).required(),
-    description: Joi.string().min(3).max(255).required(),
-    cost: Joi.number().required(),
-    image: Joi.string().min(3).max(255).required(),
+    title: Joi.string().min(3).max(255).required(),
+    price: Joi.number().required(),
+    description: Joi.string().min(3).max(1000).required(),
+    category: Joi.array().min(3).max(100).required(),
+    picture: Joi.string().min(3).max(255).required(),
 });
 
 const validate = async (schema, obj, next) => {

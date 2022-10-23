@@ -2,8 +2,9 @@ const { Schema, model } = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcryptjs');
 const gravatar = require('gravatar');
-
+const { Roles } = require('../helpers/constants');
 const SALT_WORK_FACTOR = 8;
+
 
 const userSchema = new Schema(
   {
@@ -36,12 +37,23 @@ const userSchema = new Schema(
     },
     role: {
       type: Array,
-      default: 'User',
+      default: Roles[1],
+    },
+    phone: {
+      type: String,
+      required: [true, 'Вкажіть номер телефону, наприклад: +380991234567'],
+    },
+    country: {
+      type: String,
+      default: null,
+    },
+    city: {
+      type: String,
+      default: null,
     },
     address: {
       type: String,
-      minlength: 3,
-      required: [true, 'Вкажіть адресу для відправки замовлення'],
+      default: null,
     },
   },
   {

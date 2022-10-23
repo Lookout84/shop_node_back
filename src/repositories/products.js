@@ -14,14 +14,18 @@ const getAllProducts = async query => {
     select: {
       ...(filter ? filter.split('|').join(' ') : ''),
     },
-    populate: { path: 'owner', select: 'name email subscription' },
+    populate: { path: 'category', select: 'category' },
   });
   return results;
 };
 
-const getProductById = async productId => {
+const getProductById = async (categoryId, productId) => {
   const result = await Product.findOne({
     _id: productId,
+    category: categoryId
+  }).populate({
+    path: 'category',
+    select: 'category'
   });
   return result;
 };
@@ -33,8 +37,8 @@ const removeProduct = async productId => {
   return result;
 };
 
-const addProduct = async body => {
-  const result = await Product.create({ ...body });
+const addProduct = async (categoryId, body) => {
+  const result = await Product.create({ owner: categoryId, ...body });
   return result;
 };
 

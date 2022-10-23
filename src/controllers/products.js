@@ -38,6 +38,8 @@ const getProductById = async (req, res, next) => {
 
 const addProduct = async (req, res, next) => {
   try {
+    const { id } = req.params;
+    console.log(id);
     const product = await Products.addProduct(req.body);
     if (product) {
       return res

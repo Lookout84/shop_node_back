@@ -6,15 +6,7 @@ const schemaCreateCategory = Joi.object({
   category: Joi.string()
     .min(3)
     .max(255)
-    // .pattern(new RegExp('^[а-яА-ЯёЁa-zA-Z0-9]+$'))
     .required(),
-  description: Joi.string()
-    .min(3)
-    .max(1000)
-    // .pattern(new RegExp('^[а-яА-ЯёЁa-zA-Z0-9]+$'))
-    // .pattern(new RegExp('^[а-яА-ЯёЁa-zA-Z0-9]+$'))
-    .required(),
-  image: Joi.string().min(3).max(255).required(),
 });
 
 const validate = async (schema, obj, next) => {

@@ -7,13 +7,6 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-    },
   },
   {
     versionKey: false,
@@ -34,11 +27,6 @@ const categorySchema = new Schema(
     },
   },
 );
-
-categorySchema.path('category').validate(value => {
-  const re = [а - яА - ЯёЁa - zA - Z0 - 9] + $;
-  return re.test(String(value));
-});
 
 categorySchema.plugin(mongoosePaginate);
 

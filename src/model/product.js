@@ -1,16 +1,19 @@
 const { Schema, model, SchemaTypes } = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+
 const productsSchema = new Schema(
   {
-    date: {
-      type: Date,
-      required: true,
-    },
-    name: {
+    title: {
       type: String,
       trim: true,
       stringType: 'lowercase',
+    },
+    price: {
+      type: Number,
+    },
+    picture: {
+      type: String,
     },
     description: {
       type: String,
@@ -18,15 +21,13 @@ const productsSchema = new Schema(
       stringType: 'lowercase',
       default: '-',
     },
-    cost: {
-      type: Number,
-    },
-    owner: {
+    category: {
       type: SchemaTypes.ObjectId,
       ref: 'category',
     },
-    image: {
-      type: String,
+    favorite: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -49,7 +50,7 @@ const productsSchema = new Schema(
   },
 );
 
-productsSchema.path('name').validate(value => {
+productsSchema.path('title').validate(value => {
   const re = /[A-Z]\w+/g;
   return re.test(String(value));
 });
