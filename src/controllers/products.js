@@ -3,16 +3,31 @@ const Categories = require('../repositories/category');
 const { HttpCode } = require('../helpers/constants');
 const Category = require('../model/category');
 
-const getProducts = async (req, res, next) => {
+const getAllProductsByCategory = async (req, res, next) => {
   try {
     const id = req.params.categoryId;
     console.log(id);
-    const products = await Products.getProducts(id);
+    const { docs: products, ...rest } = await Products.getAllProductsByCategory(id, req.query);
     console.log(products);
     return res.json({
       status: 'success',
       code: HttpCode.OK,
-      data: { products },
+      data: { products, ...rest },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllProducts = async (req, res, next) => {
+  try {
+    console.log(req.query);
+    const { docs: products, ...rest } = await Products.getAllProducts(req.query);
+    console.log(products);
+    return res.json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: { products, ...rest },
     });
   } catch (error) {
     next(error);
@@ -108,7 +123,8 @@ const updateProduct = async (req, res, next) => {
 };
 
 module.exports = {
-  getProducts,
+  getAllProductsByCategory,
+  getAllProducts,
   getProductById,
   addProduct,
   removeProduct,

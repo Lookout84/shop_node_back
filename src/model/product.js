@@ -22,7 +22,7 @@ const productsSchema = new Schema(
     },
     category: {
       type: SchemaTypes.ObjectId,
-      ref: 'category',
+      ref: 'Category',
     },
     favorite: {
       type: Boolean,

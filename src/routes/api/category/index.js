@@ -15,6 +15,6 @@ router.get('/', ctrl.getAllCategory);
 router.get('/:categoryId', ctrl.getCategoryById);
 router.post('/add', guard, validationCreateCategory, ctrl.addCategory);
 router.put('/:categoryId', guard, ctrl.updateCategory);
-router.get('/:categoryId/products', ctrlProduct.getProducts);
+router.get('/:categoryId/products', ctrlProduct.getAllProductsByCategory);
 router.post('/:categoryId/product/add', guard, ctrlProduct.addProduct);
 module.exports = router;

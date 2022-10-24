@@ -1,11 +1,27 @@
 const { query } = require('express');
 const Product = require('../model/product');
 
-const getAllProducts = async (categoryId, query) => {
-  const { sortBy, sortByDesc, filter, limit = 5, offset = 0 } = query;
+const getAllProductsByCategory = async (categoryId, query) => {
+  const { sortBy, sortByDesc, filter, limit = 20, offset = 0 } = query;
   const optionsSearch = { category: categoryId };
-  console.log(optionsSearch);
   const results = await Product.paginate(optionsSearch, {
+    limit,
+    offset,
+    sort: {
+      ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+      ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+    },
+    select: {
+      ...(filter ? filter.split('|').join(' ') : ''),
+    },
+    populate: { path: 'category', select: 'category' },
+  });
+  return results;
+};
+
+const getAllProducts = async (query) => {
+  const { sortBy, sortByDesc, filter, limit = 20, offset = 0 } = query;
+  const results = await Product.paginate({}, {
     limit,
     offset,
     sort: {
@@ -31,13 +47,23 @@ const getProducts = async categoryId => {
   return results;
 };
 
-const getProductById = async (categoryId, productId) => {
+const getProductByIdByCategory = async (categoryId, productId) => {
   const result = await Product.findOne({
     _id: productId,
     category: categoryId,
   }).populate({
     path: 'category',
-    select: 'category, id',
+    select: 'category',
+  });
+  return result;
+};
+
+const getProductById = async (productId) => {
+  const result = await Product.findOne({
+    _id: productId,
+  }).populate({
+    path: 'category',
+    select: 'category',
   });
   return result;
 };
@@ -66,7 +92,9 @@ const updateProduct = async body => {
 };
 
 module.exports = {
+  getAllProductsByCategory,
   getAllProducts,
+  getProductByIdByCategory,
   getProductById,
   removeProduct,
   addProduct,

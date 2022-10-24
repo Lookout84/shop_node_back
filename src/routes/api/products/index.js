@@ -10,7 +10,8 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/', ctrl.getProducts);
+router.get('/', ctrl.getAllProducts);
+router.get('/:productId', ctrl.getProductById);
 router.post('/add', guard, validationCreateProduct, ctrl.addProduct);
 router
   .put('/:productId', guard, ctrl.updateProduct)
