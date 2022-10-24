@@ -122,6 +122,30 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const getProductsByIds = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    console.log(userId);
+    const { _id: ids } = req.params.ids;
+    console.log(req.prams);
+    const products = await Products.getProductsByIds({ userId, ids });
+    if (products) {
+      return res.json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: { products },
+      });
+    }
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllProductsByCategory,
   getAllProducts,
@@ -129,4 +153,5 @@ module.exports = {
   addProduct,
   removeProduct,
   updateProduct,
+  getProductsByIds,
 };

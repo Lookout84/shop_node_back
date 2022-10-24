@@ -91,6 +91,11 @@ const updateProduct = async body => {
   return result;
 };
 
+const getProductsByIds = async (userId, ids) => {
+  const results = await Product.find({ userId, ids });
+  return results;
+}
+
 module.exports = {
   getAllProductsByCategory,
   getAllProducts,
@@ -100,4 +105,5 @@ module.exports = {
   addProduct,
   updateProduct,
   getProducts,
+  getProductsByIds,
 };
