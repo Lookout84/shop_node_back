@@ -1,10 +1,11 @@
 const { query } = require('express');
 const Product = require('../model/product');
 
-const getAllProducts = async query => {
+const getAllProducts = async (categoryId, query) => {
   const { sortBy, sortByDesc, filter, limit = 5, offset = 0 } = query;
-  // const products = {};
-  const results = await Product.paginate({
+  const optionsSearch = { category: categoryId };
+  console.log(optionsSearch);
+  const results = await Product.paginate(optionsSearch, {
     limit,
     offset,
     sort: {
@@ -19,13 +20,24 @@ const getAllProducts = async query => {
   return results;
 };
 
+const getProducts = async categoryId => {
+  console.log(categoryId);
+  const results = await Product.find({
+    category: categoryId,
+  }).populate({
+    path: 'category',
+    select: 'category',
+  });
+  return results;
+};
+
 const getProductById = async (categoryId, productId) => {
   const result = await Product.findOne({
     _id: productId,
-    category: categoryId
+    category: categoryId,
   }).populate({
     path: 'category',
-    select: 'category'
+    select: 'category, id',
   });
   return result;
 };
@@ -37,8 +49,12 @@ const removeProduct = async productId => {
   return result;
 };
 
-const addProduct = async (categoryId, body) => {
-  const result = await Product.create({ owner: categoryId, ...body });
+const addProduct = async (category, body) => {
+  console.log(category);
+  const result = await Product.create({
+    ...{ category },
+    ...body,
+  });
   return result;
 };
 
@@ -55,4 +71,5 @@ module.exports = {
   removeProduct,
   addProduct,
   updateProduct,
+  getProducts,
 };

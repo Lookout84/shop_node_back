@@ -1,15 +1,18 @@
 const Products = require('../repositories/products');
+const Categories = require('../repositories/category');
 const { HttpCode } = require('../helpers/constants');
+const Category = require('../model/category');
 
 const getProducts = async (req, res, next) => {
   try {
-    const { docs: products, ...rest } = await Products.getAllProducts(
-      req.query,
-    );
+    const id = req.params.categoryId;
+    console.log(id);
+    const products = await Products.getProducts(id);
+    console.log(products);
     return res.json({
       status: 'success',
       code: HttpCode.OK,
-      data: { products, ...rest },
+      data: { products },
     });
   } catch (error) {
     next(error);
@@ -38,13 +41,18 @@ const getProductById = async (req, res, next) => {
 
 const addProduct = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const id = req.params.categoryId;
+    const body = req.body;
     console.log(id);
-    const product = await Products.addProduct(req.body);
+    const category = await Categories.getCategoryById(id);
+    console.log(category);
+    const product = await Products.addProduct(category, body);
     if (product) {
-      return res
-        .status(HttpCode.CREATED)
-        .json({ status: 'success', code: HttpCode.CREATED, data: { product } });
+      return res.status(HttpCode.CREATED).json({
+        status: 'success',
+        code: HttpCode.CREATED,
+        data: { product },
+      });
     }
     return res.status(HttpCode.BAD_REQUEST).json({
       status: 'error',
