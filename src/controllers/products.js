@@ -126,7 +126,7 @@ const getProductsByIds = async (req, res, next) => {
   try {
     const userId = req.user.userId;
     console.log(userId);
-    const { _id: ids } = req.params.ids;
+    const ids = req.params;
     console.log(req.prams);
     const products = await Products.getProductsByIds({ userId, ids });
     if (products) {
