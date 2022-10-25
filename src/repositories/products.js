@@ -91,12 +91,26 @@ const updateProduct = async (productId, body) => {
   const result = await Product.findOneAndUpdate(
     { _id: productId },
     { ...body },
-    {
-      new: true,
-    }).populate({
-      path: 'category',
-      select: 'category',
-    });
+    { new: true, }
+  ).populate({
+    path: 'category',
+    select: 'category',
+  });
+  return result;
+};
+
+const updateFavoriteProduct = async (userId, productId, body) => {
+  const result = await Product.findOneAndUpdate(
+    { _id: productId },
+    { body, ...{ owner: userId } },
+    { new: true, }
+  ).populate({
+    path: 'category',
+    select: 'category',
+  }).populate({
+    path: 'owner',
+    select: 'user',
+  });
   return result;
 };
 
@@ -117,4 +131,5 @@ module.exports = {
   updateProduct,
   getProducts,
   getProductsByIds,
+  updateFavoriteProduct,
 };

@@ -154,6 +154,31 @@ const getProductsByIds = async (req, res, next) => {
   }
 };
 
+const updateFavoriteProduct = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const product = await Products.updateFavoriteProduct(
+      userId,
+      req.params.productId,
+      req.body
+    );
+    if (product) {
+      return res.json({
+        status: "success",
+        code: HttpCode.OK,
+        data: { product },
+      });
+    }
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: "error",
+      code: HttpCode.NOT_FOUND,
+      message: "Not found",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllProductsByCategory,
   getAllProducts,
@@ -162,4 +187,5 @@ module.exports = {
   removeProduct,
   updateProduct,
   getProductsByIds,
+  updateFavoriteProduct,
 };

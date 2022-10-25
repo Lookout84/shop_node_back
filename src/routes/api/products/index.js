@@ -17,5 +17,6 @@ router.post('/add', guard, validationCreateProduct, ctrl.addProduct);
 router
   .put('/:productId', guard, validationUpdateProduct, ctrl.updateProduct)
   .delete('/:productId', guard, ctrl.removeProduct);
+router.post('/:productId/favorite', guard, ctrl.updateFavoriteProduct)
 
 module.exports = router;
