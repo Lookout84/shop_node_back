@@ -12,7 +12,7 @@ router.use((req, res, next) => {
 
 router.get('/', ctrl.getAllProducts);
 router.get('/:productId', ctrl.getProductById);
-router.get('/ids', guard, ctrl.getProductsByIds);
+router.get('/{ids}', guard, ctrl.getProductsByIds);
 router.post('/add', guard, validationCreateProduct, ctrl.addProduct);
 router
   .put('/:productId', guard, ctrl.updateProduct)

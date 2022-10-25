@@ -19,20 +19,23 @@ const getAllProductsByCategory = async (categoryId, query) => {
   return results;
 };
 
-const getAllProducts = async (query) => {
+const getAllProducts = async query => {
   const { sortBy, sortByDesc, filter, limit = 20, offset = 0 } = query;
-  const results = await Product.paginate({}, {
-    limit,
-    offset,
-    sort: {
-      ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
-      ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+  const results = await Product.paginate(
+    {},
+    {
+      limit,
+      offset,
+      sort: {
+        ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+      },
+      select: {
+        ...(filter ? filter.split('|').join(' ') : ''),
+      },
+      populate: { path: 'category', select: 'category' },
     },
-    select: {
-      ...(filter ? filter.split('|').join(' ') : ''),
-    },
-    populate: { path: 'category', select: 'category' },
-  });
+  );
   return results;
 };
 
@@ -58,7 +61,7 @@ const getProductByIdByCategory = async (categoryId, productId) => {
   return result;
 };
 
-const getProductById = async (productId) => {
+const getProductById = async productId => {
   const result = await Product.findOne({
     _id: productId,
   }).populate({
@@ -91,10 +94,12 @@ const updateProduct = async body => {
   return result;
 };
 
-const getProductsByIds = async (userId, ids) => {
-  const results = await Product.find({ userId, ids });
+const getProductsByIds = async ids => {
+  const results = await Product.find({
+    _id: ids,
+  });
   return results;
-}
+};
 
 module.exports = {
   getAllProductsByCategory,

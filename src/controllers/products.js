@@ -7,7 +7,10 @@ const getAllProductsByCategory = async (req, res, next) => {
   try {
     const id = req.params.categoryId;
     console.log(id);
-    const { docs: products, ...rest } = await Products.getAllProductsByCategory(id, req.query);
+    const { docs: products, ...rest } = await Products.getAllProductsByCategory(
+      id,
+      req.query,
+    );
     console.log(products);
     return res.json({
       status: 'success',
@@ -22,7 +25,9 @@ const getAllProductsByCategory = async (req, res, next) => {
 const getAllProducts = async (req, res, next) => {
   try {
     console.log(req.query);
-    const { docs: products, ...rest } = await Products.getAllProducts(req.query);
+    const { docs: products, ...rest } = await Products.getAllProducts(
+      req.query,
+    );
     console.log(products);
     return res.json({
       status: 'success',
@@ -124,16 +129,18 @@ const updateProduct = async (req, res, next) => {
 
 const getProductsByIds = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
-    console.log(userId);
-    const ids = req.params;
-    console.log(req.prams);
-    const products = await Products.getProductsByIds({ userId, ids });
+    // const userId = req.user.id;
+    // console.log(userId);
+    const { id } = req.params.ids;
+    console.log(id);
+    const { docs: products, ...rest } = await Products.getProductsByIds({
+      id,
+    });
     if (products) {
       return res.json({
         status: 'success',
         code: HttpCode.OK,
-        data: { products },
+        data: { products, ...rest },
       });
     }
     return res.status(HttpCode.NOT_FOUND).json({
