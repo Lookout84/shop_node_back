@@ -5,6 +5,7 @@ const ctrlProduct = require('../../../controllers/products');
 const guard = require('../../../helpers/guard');
 
 const { validationCreateCategory } = require('./validation');
+const { validationCreateProduct } = require('../products/validation')
 
 router.use((req, res, next) => {
   console.log(req.url);
@@ -16,5 +17,5 @@ router.get('/:categoryId', ctrl.getCategoryById);
 router.post('/add', guard, validationCreateCategory, ctrl.addCategory);
 router.put('/:categoryId', guard, ctrl.updateCategory);
 router.get('/:categoryId/products', ctrlProduct.getAllProductsByCategory);
-router.post('/:categoryId/product/add', guard, ctrlProduct.addProduct);
+router.post('/:categoryId/product/add', guard, validationCreateProduct, ctrlProduct.addProduct);
 module.exports = router;

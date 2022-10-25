@@ -2,6 +2,9 @@ const Products = require('../repositories/products');
 const Categories = require('../repositories/category');
 const { HttpCode } = require('../helpers/constants');
 const Category = require('../model/category');
+const { query } = require('express');
+
+console.log(query);
 
 const getAllProductsByCategory = async (req, res, next) => {
   try {
@@ -86,12 +89,12 @@ const addProduct = async (req, res, next) => {
 
 const removeProduct = async (req, res, next) => {
   try {
-    const conatct = await Products.removeProduct(req.params.productId);
-    if (conatct) {
+    const product = await Products.removeProduct(req.params.productId);
+    if (product) {
       return res.json({
         status: 'success',
         code: HttpCode.OK,
-        data: { conatct },
+        data: { product },
       });
     }
     return res.status(HttpCode.NOT_FOUND).json({
@@ -106,8 +109,9 @@ const removeProduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
   try {
+    const id = req.params.productId;
     const product = await Products.updateProduct(
-      req.params.productId,
+      id,
       req.body,
     );
     if (product) {
@@ -129,13 +133,10 @@ const updateProduct = async (req, res, next) => {
 
 const getProductsByIds = async (req, res, next) => {
   try {
-    // const userId = req.user.id;
-    // console.log(userId);
-    const id = req.params;
-    console.log(req);
-    const { docs: products, ...rest } = await Products.getProductsByIds({
-      id,
-    });
+    const { id } = req.query.ids;
+    const { docs: products, ...rest } = await Products.getProductsByIds(
+      { id },
+    );
     if (products) {
       return res.json({
         status: 'success',

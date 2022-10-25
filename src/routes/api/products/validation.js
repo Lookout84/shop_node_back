@@ -10,6 +10,14 @@ const schemaCreateProduct = Joi.object({
     picture: Joi.string().min(3).max(255).required(),
 });
 
+const schemaUpdateProduct = Joi.object({
+    title: Joi.string().min(3).max(255).required(),
+    price: Joi.number().required(),
+    description: Joi.string().min(3).max(1000).required(),
+    category: Joi.array().min(3).max(100).required(),
+    picture: Joi.string().min(3).max(255).required(),
+});
+
 const validate = async (schema, obj, next) => {
     try {
         await schema.validateAsync(obj);
@@ -25,5 +33,8 @@ const validate = async (schema, obj, next) => {
 module.exports = {
     validationCreateProduct: (req, res, next) => {
         return validate(schemaCreateProduct, req.body, next);
+    },
+    validationUpdateProduct: (req, res, next) => {
+        return validate(schemaUpdateProduct, req.body, next);
     },
 };

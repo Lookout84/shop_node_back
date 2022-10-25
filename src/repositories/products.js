@@ -87,10 +87,16 @@ const addProduct = async (category, body) => {
   return result;
 };
 
-const updateProduct = async body => {
-  const result = await Product.findOneAndUpdate(body, {
-    new: true,
-  });
+const updateProduct = async (productId, body) => {
+  const result = await Product.findOneAndUpdate(
+    { _id: productId },
+    { ...body },
+    {
+      new: true,
+    }).populate({
+      path: 'category',
+      select: 'category',
+    });
   return result;
 };
 

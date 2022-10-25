@@ -54,7 +54,7 @@ productsSchema.path('title').validate(value => {
   return re.test(String(value));
 });
 
-productsSchema.plugin(mongoosePaginate);
+// productsSchema.plugin(mongoosePaginate);
 
 productsSchema.plugin(mongoosePaginate);
 const Product = model('Product', productsSchema);
