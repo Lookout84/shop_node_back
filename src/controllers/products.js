@@ -193,25 +193,26 @@ const deleteFavoriteProduct = async (req, res, next) => {
     const { favorite } = await Products.getProductById(id);
     console.log(favorite);
     if (favorite == true) {
-      const product = await Products.updateFavoriteProduct(
+      const product = await Products.deleteFavoriteProduct(
         userId,
         id,
         req.body,
       );
+      console.log(product);
       if (product) {
         return res.json({
           status: 'success',
           code: HttpCode.OK,
           data: { product },
         });
-      } else {
-        return res.status(HttpCode.NOT_FOUND).json({
-          status: 'error',
-          code: HttpCode.NOT_FOUND,
-          message: 'Not found',
-        });
       }
     }
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+
   } catch (error) {
     next(error);
   }

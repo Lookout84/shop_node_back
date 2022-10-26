@@ -124,7 +124,7 @@ const getProductsByIds = async ids => {
 };
 
 const deleteFavoriteProduct = async (userId, productId, body) => {
-  const result = await Product.findOneAndUpdate(
+  const result = await Product.findOneAndReplace(
     { _id: productId },
     { body, ...{ owner: userId } },
     { new: false },
