@@ -3,6 +3,7 @@ const Categories = require('../repositories/category');
 const { HttpCode } = require('../helpers/constants');
 const Category = require('../model/category');
 const { query } = require('express');
+const { get } = require('mongoose');
 
 console.log(query);
 
@@ -110,10 +111,7 @@ const removeProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const id = req.params.productId;
-    const product = await Products.updateProduct(
-      id,
-      req.body,
-    );
+    const product = await Products.updateProduct(id, req.body);
     if (product) {
       return res.json({
         status: 'success',
@@ -134,9 +132,7 @@ const updateProduct = async (req, res, next) => {
 const getProductsByIds = async (req, res, next) => {
   try {
     const { id } = req.query.ids;
-    const { docs: products, ...rest } = await Products.getProductsByIds(
-      { id },
-    );
+    const { docs: products, ...rest } = await Products.getProductsByIds({ id });
     if (products) {
       return res.json({
         status: 'success',
@@ -157,23 +153,65 @@ const getProductsByIds = async (req, res, next) => {
 const updateFavoriteProduct = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const product = await Products.updateFavoriteProduct(
-      userId,
-      req.params.productId,
-      req.body
-    );
-    if (product) {
-      return res.json({
-        status: "success",
-        code: HttpCode.OK,
-        data: { product },
+    const id = req.params.productId;
+    const { favorite } = await Products.getProductById(id);
+    console.log(favorite);
+    if (!favorite) {
+      const product = await Products.updateFavoriteProduct(
+        userId,
+        id,
+        req.body,
+      );
+      if (product) {
+        return res.json({
+          status: 'success',
+          code: HttpCode.OK,
+          data: { product },
+        });
+      }
+    } else {
+      return res.status(HttpCode.CONFLICT).json({
+        status: 'error',
+        code: HttpCode.CONFLICT,
+        message: 'PRODUCT ALREADY FAVORITE',
       });
     }
     return res.status(HttpCode.NOT_FOUND).json({
-      status: "error",
+      status: 'error',
       code: HttpCode.NOT_FOUND,
-      message: "Not found",
+      message: 'Not found',
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteFavoriteProduct = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const id = req.params.productId;
+    const { favorite } = await Products.getProductById(id);
+    console.log(favorite);
+    if (favorite == true) {
+      const product = await Products.updateFavoriteProduct(
+        userId,
+        id,
+        req.body,
+      );
+      if (product) {
+        return res.json({
+          status: 'success',
+          code: HttpCode.OK,
+          data: { product },
+        });
+      } else {
+        return res.status(HttpCode.NOT_FOUND).json({
+          status: 'error',
+          code: HttpCode.NOT_FOUND,
+          message: 'Not found',
+        });
+      }
+    }
   } catch (error) {
     next(error);
   }
@@ -188,4 +226,5 @@ module.exports = {
   updateProduct,
   getProductsByIds,
   updateFavoriteProduct,
+  deleteFavoriteProduct,
 };

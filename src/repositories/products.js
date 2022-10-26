@@ -91,7 +91,7 @@ const updateProduct = async (productId, body) => {
   const result = await Product.findOneAndUpdate(
     { _id: productId },
     { ...body },
-    { new: true, }
+    { new: true },
   ).populate({
     path: 'category',
     select: 'category',
@@ -103,14 +103,16 @@ const updateFavoriteProduct = async (userId, productId, body) => {
   const result = await Product.findOneAndUpdate(
     { _id: productId },
     { body, ...{ owner: userId } },
-    { new: true, }
-  ).populate({
-    path: 'category',
-    select: 'category',
-  }).populate({
-    path: 'owner',
-    select: 'user',
-  });
+    { new: true },
+  )
+    .populate({
+      path: 'category owner',
+      select: 'category user',
+    })
+    .populate({
+      path: 'owner',
+      select: 'user',
+    });
   return result;
 };
 
@@ -119,6 +121,15 @@ const getProductsByIds = async ids => {
     _id: ids,
   });
   return results;
+};
+
+const deleteFavoriteProduct = async (userId, productId, body) => {
+  const result = await Product.findOneAndUpdate(
+    { _id: productId },
+    { body, ...{ owner: userId } },
+    { new: false },
+  );
+  return result;
 };
 
 module.exports = {
@@ -132,4 +143,5 @@ module.exports = {
   getProducts,
   getProductsByIds,
   updateFavoriteProduct,
+  deleteFavoriteProduct,
 };
