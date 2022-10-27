@@ -102,7 +102,7 @@ const updateProduct = async (productId, body) => {
 const updateFavoriteProduct = async (userId, productId, body) => {
   const result = await Product.findOneAndUpdate(
     { _id: productId },
-    { body, ...{ owner: userId } },
+    { ...body, ...{ owner: userId } },
     { new: true },
   )
     .populate({
@@ -124,11 +124,19 @@ const getProductsByIds = async ids => {
 };
 
 const deleteFavoriteProduct = async (userId, productId, body) => {
-  const result = await Product.findOneAndReplace(
+  const result = await Product.findByIdAndUpdate(
     { _id: productId },
     { body, ...{ owner: userId } },
-    { new: false },
-  );
+    { new: true },
+  )
+    .populate({
+      path: 'category owner',
+      select: 'category user',
+    })
+    .populate({
+      path: 'owner',
+      select: 'user',
+    });
   return result;
 };
 

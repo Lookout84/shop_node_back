@@ -155,32 +155,31 @@ const updateFavoriteProduct = async (req, res, next) => {
     const userId = req.user.id;
     const id = req.params.productId;
     const { favorite } = await Products.getProductById(id);
-    console.log(favorite);
-    if (!favorite) {
+    if (favorite == false) {
       const product = await Products.updateFavoriteProduct(
         userId,
         id,
-        req.body,
-      );
+        req.body);
       if (product) {
         return res.json({
           status: 'success',
           code: HttpCode.OK,
           data: { product },
         });
+      } else {
+        return res.status(HttpCode.NOT_FOUND).json({
+          status: 'error',
+          code: HttpCode.NOT_FOUND,
+          message: 'Not found',
+        });
       }
-    } else {
-      return res.status(HttpCode.CONFLICT).json({
-        status: 'error',
-        code: HttpCode.CONFLICT,
-        message: 'PRODUCT ALREADY FAVORITE',
-      });
     }
-    return res.status(HttpCode.NOT_FOUND).json({
+    return res.status(HttpCode.CONFLICT).json({
       status: 'error',
-      code: HttpCode.NOT_FOUND,
-      message: 'Not found',
+      code: HttpCode.CONFLICT,
+      message: 'PRODUCT ALREADY FAVORITE',
     });
+
   } catch (error) {
     next(error);
   }

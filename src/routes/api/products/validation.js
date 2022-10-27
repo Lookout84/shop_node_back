@@ -6,7 +6,7 @@ const schemaCreateProduct = Joi.object({
     title: Joi.string().min(3).max(255).required(),
     price: Joi.number().required(),
     description: Joi.string().min(3).max(1000).required(),
-    category: Joi.array().min(3).max(100).required(),
+    category: Joi.array().min(3).max(100),
     picture: Joi.string().min(3).max(255).required(),
 });
 
@@ -14,7 +14,7 @@ const schemaUpdateProduct = Joi.object({
     title: Joi.string().min(3).max(255).required(),
     price: Joi.number().required(),
     description: Joi.string().min(3).max(1000).required(),
-    category: Joi.array().min(3).max(100).required(),
+    category: Joi.array().min(3).max(100),
     picture: Joi.string().min(3).max(255).required(),
 });
 
